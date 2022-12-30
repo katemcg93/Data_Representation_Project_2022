@@ -7,8 +7,8 @@
 ### Getting Started
 #### Packages
 The following packages are required to run the site on your local machine:
- - Flask==1.1.2
- - mysql_connector_repackaged==0.3.1
+ - Flask
+ - MySQL Connector
 These can also be found in the requirements.txt file in this repository.
 
 #### MySQL Connector
