@@ -56,7 +56,7 @@ The site behaviour/pages displayed depends on current session data:
 The user may log out by clicking the link in the navbar of any main page. They will then be redirected to the home page and can log in again with different credentials if they wish.
  
  ### Booking Appointments
-The site owner may book appointments for any dogs, standard users can book for their own dogs. When creating a new appointment, a Dog dropdown is prepopulated with all dogs linked to the owner.
+The site owner may book appointments for any dog, standard users can book for their own dogs. When creating a new appointment, a Dog dropdown is prepopulated with all dogs linked to the owner.
 Users can only book appointments between 8 am and 5 pm (opening hours for groomer). For this purpose, the JQuery Timepicker plugin is used. 
 
 [Link to Timepicker Source Code/Documentation](https://github.com/jonthornton/jquery-timepicker)
