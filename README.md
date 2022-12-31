@@ -9,6 +9,7 @@
 The following packages are required to run the site on your local machine:
  - Flask
  - MySQL Connector
+
 These can also be found in the requirements.txt file in this repository.
 
 #### MySQL Connector
@@ -39,7 +40,7 @@ https://katemcg93.pythonanywhere.com
   - Create/Modify/Delete Service
   
   ### User Details
-On the login page, the user is asked to enter their username and password, which is checked against a dictionary object called user in the flask_app file. The program first checks if the username is in the dictionary, then if the password is a match ,if so the user is authenticated and a session is initiated.
+On the login page, the user is asked to enter their username and password, which is checked against a dictionary object called user in the flask_app file. The program first checks if the username is in the dictionary, then if the password is a match ,if so the user is authenticated and a session is initiated. The flask Sessions module is used to manage the session.
 
 There are three potential username/password combinations. The first two correspond to entries in the Owner database table, and the third is for the site owner, providing full edit access on all objects within the site.
 
@@ -48,8 +49,21 @@ There are three potential username/password combinations. The first two correspo
 3. Username : siteowner, Password: test3
 
 The site behaviour/pages displayed depends on current session data:
-  - Users must be logged in to see the bookings page. Users can only view/create bookings for their own dogs. The site owner can modify all 
+  - Users must be logged in to see the bookings page.
   - If the logged in user is the site owner, they will have full CRUD access on the service object. Regular/unregistered users will be redirected to a read-only version of the services page.
  - If a user is logged in, a welcome message will be displayed in the nav bar. For the two standard users, their first name will be displayed (taken from the Owner DB table), whereas for the site owner, their username is displayed.
  
+The user may log out by clicking the link in the navbar of any main page. They will then be redirected to the home page and can log in again with different credentials if they wish.
+ 
+ ### Booking Appointments
+The site owner may book appointments for any dogs, standard users can book for their own dogs. When creating a new appointment, a Dog dropdown is prepopulated with all dogs linked to the owner.
+Users can only book appointments between 8 am and 5 pm (opening hours for groomer). For this purpose, the JQuery Timepicker plugin is used. 
+
+[Link to Timepicker Source Code/Documentation](https://github.com/jonthornton/jquery-timepicker)
+
+### Cancel Appointments
+To cancel an appointment, click the cancel button next to the relevant table entry. An alert will be displayed confirming the appointment has been cancelled and it will be deleted from the table.
+
+### Services
+The services table can be modified by the site owner, who may add/modify/delete services.
  
