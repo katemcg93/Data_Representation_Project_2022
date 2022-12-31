@@ -51,6 +51,7 @@ class DogDAO:
         return result[0]
     
     def findByOwnerEmail(self,email):
+        #This is used when user is logged in - ensure only their dogs are returned
         cursor = self.getcursor()
         sql="select CONCAT(c.first_name,Char(32),c.last_name) as Owner, d.name, d.age, d.breed from dog d inner join customer c on c.id = d.OwnerID where c.email = %s"
         values = (email,)

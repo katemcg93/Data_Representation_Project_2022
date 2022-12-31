@@ -112,5 +112,5 @@ bookingDAO = BookingDAO()
 data = [('2022-12-23', '14:30:00', '1', '3'),('2022-12-20', '11:30:00', '3', '4'), ('2022-12-18', '14:00:00', '4', '2'), ('2022-12-18', '14:00:00', '2', '3')]
 
 if __name__ == "__main__":
-    email = "katemg93@gmail.com"
-    print(bookingDAO.getBookingsForUser(email))
+        for x in data:
+            bookingDAO.create(x)

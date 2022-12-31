@@ -44,7 +44,7 @@
  
     </head>
 <body onload = getServices()>
-
+  <!-- Editable Services Page - must be logged in as site owner to view -->
     <nav class="navbar navbar-expand-lg bg-light" style = "background-color: #e76f51 !important; height:60px;">
         <div class="container-fluid">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -181,7 +181,7 @@
             $("#serviceTable").on('click','.btn-delete',function(){
                 // get the current row
                 var currentRow=$(this).closest("tr");       
-                var col3=currentRow.find("td:eq(2)").text(); // get current row 1st TD value
+                var col3=currentRow.find("td:eq(2)").text(); // get current row ID value to delete
 
                 $.ajax( {
                     method:"DELETE",

@@ -6,12 +6,19 @@
         <!-- JavaScript Bundle with Popper -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css" rel="stylesheet"/>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Roboto:wght@300&display=swap" rel="stylesheet">
+        
+        <!-- Code for Time Picker -->
+        <link rel="stylesheet" href="//jonthornton.github.io/jquery-timepicker/jquery.timepicker.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.3/jquery-ui.js"></script>
+        <script src="//jonthornton.github.io/jquery-timepicker/jquery.timepicker.js"></script>
         <style>
             .table th{
                 font-family:"Indie Flower";
@@ -89,6 +96,7 @@
             </tr>
         </table>
         </div>
+        <!-- Modals to update/create new bookings -->
         <div class="modal fade" id="updateBooking" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -109,7 +117,7 @@
                       </div>
                     <div class="mb-3">
                       <label for="timeinput" class="col-form-label">Time:</label>
-                      <input type = "time" id="timeinput"class="form-control"></textarea>
+                      <input type = "text" id="timeinput"class="form-control timepicker"></textarea>
                     </div>
                   </form>
                 </div>
@@ -145,7 +153,7 @@
                       </div>
                     <div class="mb-3">
                       <label for="newtimeinput" class="col-form-label">Time:</label>
-                      <input type = "time" id="newtimeinput"class="form-control"></textarea>
+                      <input type = "text" id="newtimeinput"class="form-control timepicker"></textarea>
                     </div>
                   </form>
                 </div>
@@ -163,6 +171,17 @@
             getServices();
             getDogs();
 
+           //Get timepicker to only display 8am to 5pm
+
+            $('.timepicker').timepicker( {
+              'show2400': true,
+              'timeFormat': 'H:i',
+              'minTime' : '08:00',
+              'maxTime' : '17:00'
+            }
+          );
+
+          // Keep track of whether a user is logged in and change navbar details accordinly
             function updateNavBar() {
             var user = "{{loggedInUser}}";
             if(user == "") {
@@ -185,6 +204,7 @@
                     data:"",
                     dataType:"JSON",
 
+                    //Get all appointment data and contstruct table with response
                     "success":function(response){
                         for (var i = 0; i <response.length; i++) {
                             var row = $('<tr><td>' + response[i].Dog+ '</td><td>' + response[i].Service + '</td><td>' + response[i].date + '</td><td>' + response[i].time + '</td><td>'+ response[i].id + '</td><td>'+'<button class = "btn btn-primary btn-sm btn-update">Update</button>'+ '</td><td>'+'<button class = "btn btn-primary btn-sm btn-delete style = "background-color:blue">Cancel</button>'+'</td></tr>');
@@ -198,7 +218,7 @@
             $("#BookingTable").on('click','.btn-delete',function(){
                 // get the current row
                 var currentRow=$(this).closest("tr");       
-                var col5=currentRow.find("td:eq(4)").text(); // get current row 1st TD value
+                var col5=currentRow.find("td:eq(4)").text(); // get appt ID to delete
 
                 $.ajax( {
                     method:"DELETE",
@@ -218,6 +238,7 @@
                          
             });
 
+            //Keep track of row user clicked on so correct one is updated
             currentIndex = 0;
 
             $("#BookingTable").on('click','.btn-update',function(){
@@ -256,6 +277,7 @@
                     data:"",
                     dataType:"JSON",
 
+                    //If update was successful - overwrite table row with new data
                     "success":function(response){
                         currentRow.find("td:eq(1)").text(newserviceval);
                         currentRow.find("td:eq(2)").text(newdateval);
@@ -270,6 +292,7 @@
             }
 
             function createBooking() {
+              //After user clicks to create new booking, will want this modal to be hidden
                 $('#newBooking').modal('hide');
                 var newBooking = {};
                 newBooking.servicename = document.getElementById("newserviceinput").value;
@@ -278,7 +301,7 @@
                 newBooking.time = document.getElementById("newtimeinput").value;
 
                 var bookingTable = document.getElementById("BookingTable")
-                console.log(JSON.stringify(newBooking));
+                //console.log(JSON.stringify(newBooking));
 
                 $.ajax({
                 method:"POST",
@@ -289,7 +312,7 @@
                 "success":function(response){
                     newBooking.id = response;
                     console.log(JSON.stringify(newBooking))
-                    addServiceToTable(newBooking)
+                    addBookingToTable(newBooking)
 
                 },
                 "error":function(xhr,status,error){
@@ -299,7 +322,8 @@
             })               
             }
 
-            function addServiceToTable(newBooking){
+            //Insert new appointment ito table, include update/delete buttons
+            function addBookingToTable(newBooking){
                 var tableElement = document.getElementById('BookingTable');
                 var rowElement = tableElement.insertRow(-1);
                 rowElement.setAttribute('id',newBooking.id);
@@ -321,6 +345,7 @@
             }
 
             function getServices() {
+              //When page loads, get all services - these will be used to populate service dropdowns on create/update modals
                 updateNavBar();
                 host = window.location.origin;
                 $.ajax( {
@@ -353,7 +378,7 @@
             }
 
             function getDogs() {
-                host = window.location.origin
+               //When page loads, get all dogs - these will be used to populate dog name dropdowns on create modal
                 $.ajax( {
                     method:"GET",
                     url:"/dogs",

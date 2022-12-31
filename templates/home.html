@@ -69,6 +69,7 @@
         
         <script>
           function updateNavBar() {
+            //Check details for user logged in - this will determine whether login/logout link is displayed on page
             var user = "{{loggedInUser}}";
             if(user == "") {
               document.getElementById("logoutlink").style.visibility = "hidden";

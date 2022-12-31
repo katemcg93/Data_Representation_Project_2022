@@ -16,6 +16,8 @@ services = ServiceDAO().getAll()
 owners = OwnerDAO().getAll()
 bookings = BookingDAO().getAll()
 
+#Username and password combinations - will need to be logged in to view bookings page
+#Need to be logged in as site owner to modify all booking data/services page
 user = {
     "katemg93@gmail.com" : "test",
     "emmamurphy@hotmail.com": "test2",
@@ -31,16 +33,20 @@ def login():
             session['username'] = username
             return redirect(url_for('bookings_route'))
 
-        return "<h1>Wrong username or password</h1>"    #if the username or password does not matches 
+        return "<h1>Wrong username or password</h1>"    #if the username or password does not match 
 
     return render_template("login.html")
 
+
+#When user logs out - reroute to home page
 @app.route('/logout')
 def logout():
     session.pop('username',None)
     return redirect(url_for('reroute_home'))
          
 @app.route('/dogs', methods = ['GET'])
+#If user is siteowner can see all dog details
+#Any other logged in user - their dogs only
 def getAllDogs():
     if 'username' in session:
         if session['username'] == 'siteowner':
@@ -48,6 +54,7 @@ def getAllDogs():
         else:
             dogs = DogDAO().findByOwnerEmail(session['username'])  
     response = jsonify(dogs)
+    #Below is included in functions to stop CORS errors
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
@@ -65,6 +72,8 @@ def getAllOwners ():
     return response
 
 @app.route('/viewbookings', methods = ['GET'])
+#Users forced to log in before seeing this page
+#Session details will dictate what data they can see
 def bookings_route():
     if not 'username' in session:
         return redirect(url_for('login'))
@@ -77,6 +86,7 @@ def bookings_route():
 
 @app.route('/viewservices', methods = ['GET'])
 def servcies_route():
+#If user's not logged in/not site owner - show read only version of page
     if not 'username' in session:
         return render_template("viewservices_readonly.html")
     else:
@@ -98,6 +108,7 @@ def getAllBookings ():
         else:
             bookings = BookingDAO().getBookingsForUser(session['username'])
         for i in bookings:
+            #Can't parse date-time to JSON - need to convert to string first
             i["date"] = str(i["date"])
             i["time"] = str(i["time"])
         response = jsonify(bookings)
@@ -106,6 +117,8 @@ def getAllBookings ():
 
 @app.route('/newbooking/<dog>/<date>/<time>/<servicename>', methods = ['POST'])
 def newBooking(dog,date,time,servicename):
+
+    # Need to get service/dog IDS rather than names to booking table
     ServiceID = ServiceDAO().findByName(servicename)
     DogID = DogDAO().findByName(dog)
     values = (date,time,DogID,ServiceID)
@@ -126,13 +139,10 @@ def deleteService(id):
     ServiceDAO().delete(id)
     return response
 
-@app.route('/deletedog/<dog>', methods = ['DELETE'])
-def deleteDog(dog):
-    return('999')
-
 @app.route('/home', methods = ['GET'])
 def reroute_home ():
     if 'username' in session:
+        #Pass logged in user to page so we know whether to display login/logout option
         return render_template('home.html', loggedInUser = session['username'])
     else:
         return render_template('home.html')
