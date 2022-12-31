@@ -65,5 +65,5 @@ Users can only book appointments between 8 am and 5 pm (opening hours for groome
 To cancel an appointment, click the cancel button next to the relevant table entry. An alert will be displayed confirming the appointment has been cancelled and it will be deleted from the table.
 
 ### Services
-The services table can be modified by the site owner, who may add/modify/delete services.
+The services table can be modified by the site owner, who may add/modify/delete services. Note you will not be able to delete any of the default services as these are referenced in the booking table, to test this please create/delete an additional service.
  
