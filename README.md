@@ -21,7 +21,7 @@ This site is hosted on PythonAnywhere at the below link:
 https://katemcg93.pythonanywhere.com
 
 ### Overview of Site
-#### Database Objects
+#### Database Tables
  This site represents a dog grooming business and consists of the following main objects: 
   - Services: Types of treatments offered and prices
   - Owners: Customers who may own one or more dogs, who can be booked for treatments
